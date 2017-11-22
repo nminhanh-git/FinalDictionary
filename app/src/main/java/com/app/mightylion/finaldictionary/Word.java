@@ -1,10 +1,12 @@
 package com.app.mightylion.finaldictionary;
 
+import java.io.Serializable;
+
 /**
  * Created by nminh on 11/22/2017.
  */
 
-public class Word {
+public class Word implements Serializable{
     private long id;
     private String word;
     private String content;
@@ -17,6 +19,11 @@ public class Word {
 
     public Word(long id, String word, String content) {
         this.id = id;
+        this.word = word;
+        this.content = content;
+    }
+
+    public Word(String word, String content) {
         this.word = word;
         this.content = content;
     }
