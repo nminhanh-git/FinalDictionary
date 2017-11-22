@@ -22,7 +22,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     //Database path
     private static String DATABASE_PATH;
     //Database name
-    private static final String DATABASE_NAME = "anh_viet";
+    private static final String DATABASE_NAME = "anh_viet.db";
 
     private final Context myContext;
 
