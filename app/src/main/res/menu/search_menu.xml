@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/word_speech_search"
+        android:icon="@drawable/ic_speech_word"
+        android:title="My word"
+        app:showAsAction="always"></item>
+
+    <item
+        android:id="@+id/info"
+        android:title="Về chúng tôi"></item>
+
+    <item
+        android:id="@+id/clear_search_history"
+        android:title="Xóa lịch sử tìm kiếm"></item>
+</menu>

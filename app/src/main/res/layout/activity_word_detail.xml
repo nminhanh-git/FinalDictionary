@@ -8,25 +8,7 @@
     android:orientation="vertical"
     tools:context="com.app.mightylion.finaldictionary.WordDetailActivity">
 
-    <Button
-        android:id="@+id/word_pronounce_american"
-        android:layout_marginTop="50dp"
-        android:layout_width="50dp"
-        android:layout_height="40dp"
-        android:layout_alignTop="@id/word_web_view"
-        android:layout_alignRight="@id/word_web_view"
-        android:text="AE" />
-
-    <Button
-        android:layout_marginTop="50dp"
-        android:id="@+id/word_pronounce_british"
-        android:layout_width="50dp"
-        android:layout_height="40dp"
-        android:layout_alignTop="@id/word_web_view"
-        android:layout_toLeftOf="@id/word_pronounce_american"
-        android:text="BE" />
-
-    <WebView
+        <WebView
         android:id="@+id/word_web_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"></WebView>

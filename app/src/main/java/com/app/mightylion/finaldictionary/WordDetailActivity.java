@@ -1,28 +1,26 @@
 package com.app.mightylion.finaldictionary;
 
 import android.content.Intent;
-import android.os.Build;
 import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.webkit.WebBackForwardList;
-import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.Toast;
 
+import net.gotev.speech.Speech;
+
 import java.util.Locale;
 
-public class WordDetailActivity extends AppCompatActivity implements View.OnClickListener {
+public class WordDetailActivity extends AppCompatActivity {
 
     private WebView wordWebView;
-    private Button BritishSpeaker;
-    private Button AmericanSpeaker;
 
     private DatabaseHandler databaseHandler;
     private String searchWord;
@@ -52,6 +50,8 @@ public class WordDetailActivity extends AppCompatActivity implements View.OnClic
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_word_detail);
 
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
         leftToRightAnim = AnimationUtils.loadAnimation(WordDetailActivity.this, R.anim.left_to_right);
         rightToLeftAnim = AnimationUtils.loadAnimation(WordDetailActivity.this, R.anim.right_to_left);
 
@@ -65,17 +65,16 @@ public class WordDetailActivity extends AppCompatActivity implements View.OnClic
                 }
                 return false;
             }
+
             @Override
             public void onPageFinished(WebView view, String url) {
                 if (GO_BACK) {
                     speakWord = wordWebView.getUrl().substring(8);
-                    view.scrollTo(0,0);
+                    view.scrollTo(0, 0);
                 }
             }
         });
 
-        BritishSpeaker = findViewById(R.id.word_pronounce_british);
-        BritishSpeaker.setOnClickListener(this);
         UKVoice = new TextToSpeech(WordDetailActivity.this, new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
@@ -88,8 +87,6 @@ public class WordDetailActivity extends AppCompatActivity implements View.OnClic
             }
         });
 
-        AmericanSpeaker = findViewById(R.id.word_pronounce_american);
-        AmericanSpeaker.setOnClickListener(this);
         USVoice = new TextToSpeech(WordDetailActivity.this, new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
@@ -106,20 +103,46 @@ public class WordDetailActivity extends AppCompatActivity implements View.OnClic
         databaseHandler.createDatabase();
 
         Intent wordIntent = getIntent();
-        searchWord = wordIntent.getStringExtra("word");
+        searchWord = wordIntent.getStringExtra(SearchActivity.WORD);
         speakWord = showContent(searchWord);
 
     }
 
+    @Override
+    protected void onDestroy() {
+        USVoice.stop();
+        UKVoice.stop();
+        super.onDestroy();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.speech_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.UK_voice:
+                UKVoice.speak(speakWord, TextToSpeech.QUEUE_FLUSH, null);
+                return true;
+            case R.id.US_voice:
+                USVoice.speak(speakWord, TextToSpeech.QUEUE_FLUSH, null);
+                return true;
+        }
+        return false;
+    }
+
     protected String showContent(String word) {
-        String searchWord = "about:blank";
+        String searchWord = word;
         if (word.contains("entry://")) {
             searchWord = word;
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.append(word.substring(8));
             word = stringBuilder.toString();
         }
-        String wordContent = getWordHTML(word);
+        String wordContent = databaseHandler.getWord(word);
         if (wordContent == null) {
             Toast.makeText(this, "Không tìm thấy từ này", Toast.LENGTH_SHORT).show();
             this.finish();
@@ -139,28 +162,15 @@ public class WordDetailActivity extends AppCompatActivity implements View.OnClic
                     "        </meta>\n" +
                     "    </head>\n" +
                     "    <body>\n");
+
             contentBuilder.append(wordContent);
             contentBuilder.append("</body>\n" + "</html>");
             wordWebView.startAnimation(leftToRightAnim);
+            if (!searchWord.contains("entry://")) {
+                searchWord = "entry://" + searchWord;
+            }
             wordWebView.loadDataWithBaseURL("file:////android_asset/", contentBuilder.toString(), "text/html", "utf-8", searchWord);
             return word;
-        }
-    }
-
-    protected String getWordHTML(String word) {
-        Word aWord = databaseHandler.getWord(word);
-        if (aWord == null) return null;
-        else return aWord.getContent();
-    }
-
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.word_pronounce_british:
-                UKVoice.speak(speakWord, TextToSpeech.QUEUE_FLUSH, null);
-                break;
-            case R.id.word_pronounce_american:
-                USVoice.speak(speakWord, TextToSpeech.QUEUE_FLUSH, null);
         }
     }
 }

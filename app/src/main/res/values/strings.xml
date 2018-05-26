@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">Final Dictionary</string>
+    <string name="speech_prompt">Hãy nói gì đó &#8230;</string>
+    <string name="speech_not_supported">xin lỗi, thiết bị của bạn không hỗ trợ nhận giọng nói :(</string>
+    <string name="informtion_button">Thông tin</string>
+    <string name="application_version_title">Phiên bản ứng dụng</string>
+    <string name="application_version_number">1.0.0</string>
+    <string name="about_us_title">Về chúng tôi</string>
+    <string name="about_us_subheading">Mighty Lions</string>
+    <string name="contact">Điện thoại: 0947675699</string>
+    <string name="email">Email: nminhanh1997@gmail.com </string>
+    <string name="facebook">Facebook: fb.me/nmanh192397</string>
+    <string name="designer">App Desisner</string>
 </resources>
